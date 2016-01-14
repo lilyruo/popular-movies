@@ -10,6 +10,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 /**
@@ -26,15 +28,15 @@ public class MovieAdaptor extends ArrayAdapter<Movie> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         Movie movie = getItem(position);
-        if (movie == null) {
+        if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.movie_item, parent, false);
         }
         ImageView imageView = (ImageView) convertView.findViewById(R.id.movie_image);
-        // TODO: set image view
+        Picasso.with(getContext()).load(movie.getImageUrl()).into(imageView);
 
         TextView titleView = (TextView) convertView.findViewById(R.id.movie_title);
-        titleView.setText(movie.getId());
+        titleView.setText(movie.getTitle());
 
-        return super.getView(position, convertView, parent);
+        return convertView;
     }
 }

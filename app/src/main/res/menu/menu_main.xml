@@ -3,8 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.ruoruozh.spofitystreamer.MainActivity">
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:id="@+id/action_sort_popularity"
+        android:orderInCategory="200"
+        android:title="Sort By Popularity"
+        app:showAsAction="never"></item>
+    <item
+        android:id="@+id/action_sort_rating"
+        android:orderInCategory="150"
+        android:title="Sort By Rating"
+        app:showAsAction="never"></item>
 </menu>
