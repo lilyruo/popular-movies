@@ -1,16 +1,16 @@
 package com.ruoruozh.spofitystreamer;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import static com.ruoruozh.spofitystreamer.Movie.*;
+import com.squareup.picasso.Picasso;
+
+import static com.ruoruozh.spofitystreamer.Movie.MOVIE_LABEL;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
@@ -24,6 +24,18 @@ public class MovieDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movie_detail);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        setupVideo();
+
+    }
+
+    private void setupVideo() {
+
+        ImageView imageView = (ImageView) findViewById(R.id.poster);
+        Picasso.with(this).load("https://wordifications.files.wordpress.com/2012/03/the-hunger-games-movie-poster-12162011.jpg").into(imageView);
+
+        TextView synopsisView = (TextView) findViewById(R.id.synopsis);
+        synopsisView.setText("Katniss Everdeen voluntarily takes her younger sister's place in the Hunger Games, a televised competition in which two teenagers from each of the twelve Districts of Panem are chosen at random to fight to the death.");
     }
 
     @Override
@@ -39,9 +51,4 @@ public class MovieDetailActivity extends AppCompatActivity {
         Log.d(LOG_TAG, "Received intent with move=" + movie);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-
-    }
 }
