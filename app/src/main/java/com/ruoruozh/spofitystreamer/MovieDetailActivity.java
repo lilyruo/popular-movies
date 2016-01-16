@@ -8,9 +8,10 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ruoruozh.spofitystreamer.data.Movie;
 import com.squareup.picasso.Picasso;
 
-import static com.ruoruozh.spofitystreamer.Movie.MOVIE_LABEL;
+import static com.ruoruozh.spofitystreamer.data.Movie.MOVIE_LABEL;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
@@ -25,11 +26,11 @@ public class MovieDetailActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        setupVideo();
+        setUpMovie();
 
     }
 
-    private void setupVideo() {
+    private void setUpMovie() {
 
         ImageView imageView = (ImageView) findViewById(R.id.poster);
         Picasso.with(this).load("https://wordifications.files.wordpress.com/2012/03/the-hunger-games-movie-poster-12162011.jpg").into(imageView);

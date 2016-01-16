@@ -1,15 +1,15 @@
 package com.ruoruozh.spofitystreamer;
 
 import android.content.Context;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ruoruozh.spofitystreamer.data.Movie;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -39,4 +39,5 @@ public class MovieAdaptor extends ArrayAdapter<Movie> {
 
         return convertView;
     }
+
 }

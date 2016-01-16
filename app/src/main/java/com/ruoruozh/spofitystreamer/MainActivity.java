@@ -1,5 +1,6 @@
 package com.ruoruozh.spofitystreamer;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,6 +10,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.ruoruozh.spofitystreamer.data.FetchMovieAsyncTask;
+import com.ruoruozh.spofitystreamer.data.Movie;
+import com.ruoruozh.spofitystreamer.data.MovieDataParser;
+
+import java.net.HttpURLConnection;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,17 +43,7 @@ public class MainActivity extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_sort_popularity) {
-            Log.d(LOG_TAG, "Sort by popularity menu pressed");
-            return true;
-        } else if (id == R.id.action_sort_rating) {
-            Log.d(LOG_TAG, "Sort by rating menu pressed");
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
+        return super.onOptionsItemSelected(item);
     }
+
 }
