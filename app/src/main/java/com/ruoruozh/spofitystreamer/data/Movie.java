@@ -84,6 +84,8 @@ public class Movie implements Parcelable {
         builder.append(title);
         builder.append(' ');
         builder.append(imageUrl);
+        builder.append(' ');
+        builder.append(rating);
         builder.append(']');
         return builder.toString();
     }

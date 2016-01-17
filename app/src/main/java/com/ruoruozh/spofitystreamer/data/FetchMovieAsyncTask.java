@@ -20,15 +20,17 @@ import java.util.List;
 public class FetchMovieAsyncTask extends AsyncTask<Void, Void, List<Movie>> {
 
     private final String LOG_TAG = this.getClass().getSimpleName();
-    private MovieAdaptor movieAdaptor;
+    private final MovieAdaptor movieAdaptor;
+    private final SortOrder sortOrder;
 
-    public FetchMovieAsyncTask(MovieAdaptor movieAdaptor) {
+    public FetchMovieAsyncTask(MovieAdaptor movieAdaptor, SortOrder sortOrder) {
         this.movieAdaptor = movieAdaptor;
+        this.sortOrder = sortOrder;
     }
 
     @Override
     protected List<Movie> doInBackground(Void... params) {
-        Log.d(LOG_TAG, "fetching latest movies");
+        Log.d(LOG_TAG, "fetching latest movies, sort order=" + sortOrder.getDescription());
         String movieJson = getMoviesJSON();
         if (movieJson == null) {
             return Collections.emptyList();
@@ -40,7 +42,9 @@ public class FetchMovieAsyncTask extends AsyncTask<Void, Void, List<Movie>> {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         try {
-            URL url = new URL("http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=c2b3c34fb570e57a200c4c1ee131f1f6");
+            URL url = new URL("http://api.themoviedb" +
+                    ".org/3/discover/movie?api_key=c2b3c34fb570e57a200c4c1ee131f1f6&sort_by=" +
+                    sortOrder.getDescription());
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();

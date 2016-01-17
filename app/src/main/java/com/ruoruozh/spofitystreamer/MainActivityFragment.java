@@ -1,7 +1,9 @@
 package com.ruoruozh.spofitystreamer;
 
+import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.content.SharedPreferences;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,8 +18,10 @@ import android.widget.GridView;
 
 import com.ruoruozh.spofitystreamer.data.FetchMovieAsyncTask;
 import com.ruoruozh.spofitystreamer.data.Movie;
+import com.ruoruozh.spofitystreamer.data.SortOrder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -26,17 +30,27 @@ import java.util.List;
 public class MainActivityFragment extends Fragment {
 
     private final String LOG_TAG = this.getClass().getSimpleName();
+    private static final String SORT_ORDER = "sort_order";
 
     private MovieAdaptor movieAdaptor;
     private FetchMovieAsyncTask fetchMovieAsyncTask;
-
-    public MainActivityFragment() {
-    }
+    private SortOrder sortOrder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        readFromSharedPreference();
+    }
+
+    private void readFromSharedPreference() {
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        if (sharedPreferences.contains(SORT_ORDER)) {
+            sortOrder = SortOrder.fromValue(sharedPreferences.getString(SORT_ORDER, SortOrder
+                    .POPULARITY.getDescription()));
+        } else {
+            sortOrder = SortOrder.POPULARITY;
+        }
     }
 
     @Override
@@ -58,22 +72,14 @@ public class MainActivityFragment extends Fragment {
         movieAdaptor = new MovieAdaptor(getActivity(), getMovies());
         gridView.setAdapter(movieAdaptor);
 
+        // trigger a refresh of the movies
+        refresh(sortOrder);
+
         return rootView;
     }
 
     private List<Movie> getMovies() {
-        List<Movie> movieList = new ArrayList<Movie>();
-        movieList.add(new Movie("1", "1Hunger Game", "http://i.imgur.com/KaQpUaHb.jpg"));
-        movieList.add(new Movie("2", "2PS2", "http://i.imgur.com/gvOZuJvb.jpg"));
-        movieList.add(new Movie("3", "3Angry Birds", "http://i.imgur.com/pGh59qXb.jpg"));
-        movieList.add(new Movie("4", "4Heros", "http://i.imgur.com/UB07NkHb.jpg"));
-        movieList.add(new Movie("5", "5Curious Story of Benjamin", "http://i.imgur.com/YToAPOZb.jpg"));
-        movieList.add(new Movie("6", "6Star Wars", "http://i.imgur.com/ujfDCorb.jpg"));
-        movieList.add(new Movie("7", "7Star Trek", "http://i.imgur.com/KkAfQv7b.jpg"));
-        movieList.add(new Movie("8", "8Gone Girl", "http://i.imgur.com/tbw2oMib.jpg"));
-        movieList.add(new Movie("9", "9Small World", "http://i.imgur.com/DceiGmpb.jpg"));
-        movieList.add(new Movie("10", "10Smoking Guns", "http://i.imgur.com/KYwckaub.jpg"));
-        return movieList;
+        return new ArrayList<>();
     }
 
     @Override
@@ -90,32 +96,50 @@ public class MainActivityFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        saveToSharedPreference();
+    }
+
+    private void saveToSharedPreference() {
+        SharedPreferences sharedPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(SORT_ORDER, sortOrder.getDescription());
+        editor.commit();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_sort_popularity) {
             Log.d(LOG_TAG, "Sort by popularity menu pressed");
+            if (sortOrder != SortOrder.POPULARITY) {
+                refresh(SortOrder.POPULARITY);
+                sortOrder = SortOrder.POPULARITY;
+            }
             return true;
         } else if (id == R.id.action_sort_rating) {
             Log.d(LOG_TAG, "Sort by rating menu pressed");
+            if (sortOrder != SortOrder.RATING) {
+                refresh(SortOrder.RATING);
+                sortOrder = SortOrder.RATING;
+            }
             return true;
         } else if (id == R.id.refresh) {
-            refresh();
-            return false;
+            refresh(sortOrder);
+            return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
     }
 
-    private void refresh() {
-        if (fetchMovieAsyncTask == null) {
-            fetchMovieAsyncTask = new FetchMovieAsyncTask(movieAdaptor);
+    private void refresh(SortOrder sortOrder) {
+        if (fetchMovieAsyncTask != null) {
+            fetchMovieAsyncTask.cancel(true);
         }
-        AsyncTask.Status status = fetchMovieAsyncTask.getStatus();
-        if (status == AsyncTask.Status.RUNNING) {
-            return;
-        }
+        fetchMovieAsyncTask = new FetchMovieAsyncTask(movieAdaptor, sortOrder);
         fetchMovieAsyncTask.execute();
     }
 
