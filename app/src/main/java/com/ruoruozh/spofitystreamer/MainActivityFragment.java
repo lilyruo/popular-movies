@@ -31,16 +31,24 @@ public class MainActivityFragment extends Fragment {
 
     private final String LOG_TAG = this.getClass().getSimpleName();
     private static final String SORT_ORDER = "sort_order";
+    private static final String MOVIES = "movies";
 
     private MovieAdaptor movieAdaptor;
     private FetchMovieAsyncTask fetchMovieAsyncTask;
     private SortOrder sortOrder;
+    private ArrayList<Movie> movieList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         readFromSharedPreference();
+        if (savedInstanceState == null || savedInstanceState.containsKey(MOVIES)) {
+            movieList = new ArrayList<>();
+        } else {
+            movieList = savedInstanceState.getParcelableArrayList(MOVIES);
+        }
+
     }
 
     private void readFromSharedPreference() {
@@ -69,17 +77,13 @@ public class MainActivityFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        movieAdaptor = new MovieAdaptor(getActivity(), getMovies());
+        movieAdaptor = new MovieAdaptor(getActivity(), movieList);
         gridView.setAdapter(movieAdaptor);
 
         // trigger a refresh of the movies
         refresh(sortOrder);
 
         return rootView;
-    }
-
-    private List<Movie> getMovies() {
-        return new ArrayList<>();
     }
 
     @Override
@@ -106,6 +110,12 @@ public class MainActivityFragment extends Fragment {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(SORT_ORDER, sortOrder.getDescription());
         editor.commit();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList(MOVIES, movieList);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
