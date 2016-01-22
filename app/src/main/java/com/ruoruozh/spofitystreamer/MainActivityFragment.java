@@ -155,7 +155,7 @@ public class MainActivityFragment extends Fragment {
             return super.onOptionsItemSelected(item);
         }
     }
-
+    
     private void refresh(SortOrder sortOrder, boolean resetPage) {
         if (fetchMovieAsyncTask != null) {
             fetchMovieAsyncTask.cancel(true);
