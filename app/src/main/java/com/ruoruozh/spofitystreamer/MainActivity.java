@@ -1,22 +1,10 @@
 package com.ruoruozh.spofitystreamer;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import com.ruoruozh.spofitystreamer.data.FetchMovieAsyncTask;
-import com.ruoruozh.spofitystreamer.data.Movie;
-import com.ruoruozh.spofitystreamer.data.MovieDataParser;
-
-import java.net.HttpURLConnection;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 

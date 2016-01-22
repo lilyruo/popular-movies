@@ -22,29 +22,35 @@ public class FetchMovieAsyncTask extends AsyncTask<Void, Void, List<Movie>> {
     private final String LOG_TAG = this.getClass().getSimpleName();
     private final MovieAdaptor movieAdaptor;
     private final SortOrder sortOrder;
+    private long pageToLoad;
 
-    public FetchMovieAsyncTask(MovieAdaptor movieAdaptor, SortOrder sortOrder) {
+    public FetchMovieAsyncTask(MovieAdaptor movieAdaptor, SortOrder sortOrder, boolean clearAll) {
         this.movieAdaptor = movieAdaptor;
         this.sortOrder = sortOrder;
+        if (clearAll) {
+            pageToLoad = 1;
+        } else {
+            pageToLoad = movieAdaptor.getCurrentPage() + 1;
+        }
     }
 
     @Override
     protected List<Movie> doInBackground(Void... params) {
-        Log.d(LOG_TAG, "fetching latest movies, sort order=" + sortOrder.getDescription());
-        String movieJson = getMoviesJSON();
+        Log.d(LOG_TAG, "fetching latest movies, sort order=" + sortOrder.getDescription() + ", " +
+                "page=" + pageToLoad);
+        String movieJson = getMoviesJSON(pageToLoad);
         if (movieJson == null) {
             return Collections.emptyList();
         }
         return MovieDataParser.parseMovieData(movieJson);
     }
 
-    private String getMoviesJSON() {
+    private String getMoviesJSON(long pageNumber) {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         try {
-            URL url = new URL("http://api.themoviedb" +
-                    ".org/3/discover/movie?api_key=c2b3c34fb570e57a200c4c1ee131f1f6&sort_by=" +
-                    sortOrder.getDescription());
+            URL url = new URL("http://api.themoviedb.org/3/discover/movie?api_key=c2b3c34fb570e57a200c4c1ee131f1f6&sort_by=" +
+                    sortOrder.getDescription()+"&page=" + pageNumber);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
@@ -83,8 +89,15 @@ public class FetchMovieAsyncTask extends AsyncTask<Void, Void, List<Movie>> {
 
     @Override
     protected void onPostExecute(List<Movie> movies) {
-        movieAdaptor.clear();
+        if (movies.isEmpty()) {
+            return;
+        }
+        if (pageToLoad == 1) {
+            movieAdaptor.clear();
+        }
         movieAdaptor.addAll(movies);
+        // set the page number to the one page successfully loaded just now
+        movieAdaptor.setCurrentPage(pageToLoad);
         movieAdaptor.notifyDataSetChanged();
     }
 }

@@ -1,6 +1,5 @@
 package com.ruoruozh.spofitystreamer;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import static com.ruoruozh.spofitystreamer.data.Movie.MOVIE_LABEL;
 public class MovieDetailActivity extends AppCompatActivity {
 
     private final String LOG_TAG = this.getClass().getSimpleName();
-    private static final String MOVIE = "movie";
 
     private Movie movie;
 

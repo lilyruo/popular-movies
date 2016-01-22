@@ -87,6 +87,11 @@ public class MovieDataParserTest extends AndroidTestCase {
             "  \"total_pages\": 12579\n" +
             "}";
 
+    public void testParseTotalPages() {
+        long totalPages = MovieDataParser.parseTotalPage(SAMPLE_JSON);
+        Assert.assertEquals(12579, totalPages);
+    }
+
     public void testParseMovieData() throws JSONException {
         List<Movie> movies = MovieDataParser.parseMovieData(SAMPLE_JSON);
         Assert.assertEquals(3, movies.size());

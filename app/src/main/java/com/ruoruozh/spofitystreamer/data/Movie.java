@@ -3,10 +3,6 @@ package com.ruoruozh.spofitystreamer.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.json.JSONObject;
-
-import java.util.Calendar;
-
 /**
  * Created by Hudi on 1/11/16.
  */
