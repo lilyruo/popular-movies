@@ -18,9 +18,11 @@ import java.util.List;
  * Created by Hudi on 1/11/16.
  */
 public class MovieAdaptor extends ArrayAdapter<Movie> {
+    private long currentPage;
 
     public MovieAdaptor(Context context, List<Movie> movieList) {
         super(context, 0, movieList);
+        currentPage = 0;
     }
 
 
@@ -40,4 +42,11 @@ public class MovieAdaptor extends ArrayAdapter<Movie> {
         return convertView;
     }
 
+    public long getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(long currentPage) {
+        this.currentPage = currentPage;
+    }
 }

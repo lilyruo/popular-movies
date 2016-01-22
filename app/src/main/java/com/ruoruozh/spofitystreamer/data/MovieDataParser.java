@@ -25,13 +25,13 @@ public class MovieDataParser {
     private static final String OVERVIEW = "overview";
     private static final String RELEASE_DATE = "release_date";
     private static final String IMAGE_PREFIX = "http://image.tmdb.org/t/p/w185";
+    private static final String TOTAL_PAGES = "total_pages";
 
 
     public static List<Movie> parseMovieData(String jsonText) {
         List<Movie> movies = new ArrayList<>();
-        JSONObject rootJsonObj = null;
         try {
-            rootJsonObj = new JSONObject(jsonText);
+            JSONObject rootJsonObj = new JSONObject(jsonText);
             JSONArray results = rootJsonObj.getJSONArray(RESULTS);
             for (int i = 0; i < results.length(); i++) {
                 JSONObject result = results.getJSONObject(i);
@@ -43,6 +43,15 @@ public class MovieDataParser {
         } catch (JSONException e) {
         }
         return movies;
+    }
+
+    public static long parseTotalPage(String jsonText) {
+        try {
+            JSONObject rootJsonObj = new JSONObject(jsonText);
+            return rootJsonObj.getLong(TOTAL_PAGES);
+        } catch (JSONException e) {
+        }
+        return 1;
     }
 
     private static Movie createMovieFromJson(JSONObject jsonObject) {
