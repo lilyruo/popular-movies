@@ -38,7 +38,8 @@ public class MovieDetailActivityFragment extends Fragment {
     private void refreshView(Movie movie) {
         View rootView = getView();
         ImageView imageView = (ImageView)rootView.findViewById(R.id.poster);
-        Picasso.with(getActivity()).load(movie.getImageUrl()).into(imageView);
+        Picasso.with(getActivity()).load(movie.getImageUrl()).error(R.drawable
+                .error_movie_placeholder).placeholder(R.drawable.movie_placeholder).into(imageView);
         TextView synapsisView = (TextView)rootView.findViewById(R.id.synopsis);
         synapsisView.setText(movie.getSynopsis());
         TextView titleView = (TextView) rootView.findViewById(R.id.title);

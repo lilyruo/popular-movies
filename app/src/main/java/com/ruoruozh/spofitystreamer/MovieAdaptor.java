@@ -33,7 +33,9 @@ public class MovieAdaptor extends ArrayAdapter<Movie> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.movie_item, parent, false);
         }
         ImageView imageView = (ImageView) convertView.findViewById(R.id.movie_image);
-        Picasso.with(getContext()).load(movie.getImageUrl()).into(imageView);
+        Picasso.with(getContext()).load(movie.getImageUrl()).placeholder(R.drawable
+                .movie_placeholder).error(R.drawable.error_movie_placeholder).into
+                (imageView);
 
         TextView titleView = (TextView) convertView.findViewById(R.id.movie_title);
         titleView.setText(movie.getTitle());
