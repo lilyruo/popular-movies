@@ -1,8 +1,10 @@
 package com.ruoruozh.spofitystreamer.data;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.ruoruozh.spofitystreamer.BuildConfig;
 import com.ruoruozh.spofitystreamer.MovieAdaptor;
 
 import java.io.BufferedReader;
@@ -20,6 +22,9 @@ import java.util.List;
 public class FetchMovieAsyncTask extends AsyncTask<Void, Void, List<Movie>> {
 
     private final String LOG_TAG = this.getClass().getSimpleName();
+    private static final String SORT_BY = "sort_by";
+    private static final String API_KEY = "api_key";
+    private static final String PAGE = "page";
     private final MovieAdaptor movieAdaptor;
     private final SortOrder sortOrder;
     private long pageToLoad;
@@ -49,8 +54,7 @@ public class FetchMovieAsyncTask extends AsyncTask<Void, Void, List<Movie>> {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         try {
-            URL url = new URL("http://api.themoviedb.org/3/discover/movie?api_key=c2b3c34fb570e57a200c4c1ee131f1f6&sort_by=" +
-                    sortOrder.getDescription()+"&page=" + pageNumber);
+            URL url = new URL(buildAPIQueryUrL(pageNumber));
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
@@ -85,6 +89,14 @@ public class FetchMovieAsyncTask extends AsyncTask<Void, Void, List<Movie>> {
                 }
             }
         }
+    }
+
+    private String buildAPIQueryUrL(long pageNumber) {
+        Uri buildUri = Uri.parse("http://api.themoviedb.org/3/discover/movie?").buildUpon()
+                .appendQueryParameter(API_KEY, BuildConfig.THE_MOVIEDB_API_KEY)
+                .appendQueryParameter(SORT_BY, sortOrder.getDescription())
+                .appendQueryParameter(PAGE, String.valueOf(pageNumber)).build();
+        return buildUri.toString();
     }
 
     @Override
