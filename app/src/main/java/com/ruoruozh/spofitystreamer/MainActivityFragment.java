@@ -91,10 +91,14 @@ public class MainActivityFragment extends Fragment {
         movieAdaptor = new MovieAdaptor(getActivity(), movieList);
         gridView.setAdapter(movieAdaptor);
 
+        return rootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         // trigger a refresh of the movies
         refresh(sortOrder, true);
-
-        return rootView;
     }
 
     @Override
